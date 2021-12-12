@@ -1,0 +1,12 @@
+# Python env
+/al-equip/
+
+# Logs
+*.txt
+
+# Output
+/*.lua
+
+# ESF source files
+/ESF/dat/
+/ESF/eq/

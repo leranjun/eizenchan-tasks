@@ -5,7 +5,7 @@ from github import Github
 from mwapi import mwAPI
 
 with open(".control", "r") as f:
-    if (f.read() == "off"):
+    if (f.read().strip() == "off"):
         sys.exit(0)
 
 logging.basicConfig(

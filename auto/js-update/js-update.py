@@ -1,8 +1,13 @@
+from sys import exit
 import logging
 from mwapi import mwAPI
 import subprocess
 import os
 from errno import EEXIST
+
+with open(".control", "r") as f:
+    if (f.read().strip() == "off"):
+        exit(0)
 
 def mkdir_p(path):
     try:

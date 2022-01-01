@@ -345,10 +345,10 @@ class mwAPI:
 
     def prepend(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
         return self.edit(page, prependtext=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
-    
+
     def addSection(self, page=None, title=None, text=None, *, suppressAbuseFilter=False, **kwargs):
         return self.edit(page, section="new", sectiontitle=title, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
-    
+
     def replaceTop(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
         return self.edit(page, section=0, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
 

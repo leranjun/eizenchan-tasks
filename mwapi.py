@@ -345,6 +345,12 @@ class mwAPI:
 
     def prepend(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
         return self.edit(page, prependtext=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+    
+    def addSection(self, page=None, title=None, text=None, *, suppressAbuseFilter=False, **kwargs):
+        return self.edit(page, section="new", sectiontitle=title, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+    
+    def replaceTop(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
+        return self.edit(page, section=0, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
 
     def move(self, before=None, after=None, reason=None, *, beforeid=None, talk=True, subpages=True, redirect=False, **kwargs):
         if (self.token is None):
@@ -379,4 +385,3 @@ class mwAPI:
                 raise APIError(r["error"]["info"], code)
         else:
             return r["move"]
-

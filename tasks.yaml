@@ -1,0 +1,18 @@
+- name: gh-sync
+  command: cd ~/tasks && git reset --hard && git pull
+  image: tf-bullseye-std
+  no-filelog: true
+  schedule: "0 0 * * *"
+  emails: onfailure
+- name: al-equip
+  command: cd ~/tasks/auto/al-equip && al-equip/bin/python3 al-equip.py
+  image: tf-python39
+  no-filelog: true
+  schedule: "0 11 * * THU"
+  emails: onfailure
+- name: js-update
+  command: cd ~/tasks/auto/js-update && js-update/bin/python3 js-update.py
+  image: tf-python39
+  no-filelog: true
+  schedule: "0 20 1 * *"
+  emails: onfailure

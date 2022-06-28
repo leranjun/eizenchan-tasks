@@ -1,7 +1,5 @@
 script.py
-passwords.py
-mwapi.py
-!/mwapi.py
+/passwords.py
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,lua,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,lua,linux

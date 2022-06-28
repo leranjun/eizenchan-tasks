@@ -32,7 +32,7 @@ print("Logged in")
 year_zh = toZhNum(CONFIG["year"])
 month_zh = toZhNum(CONFIG["month"])
 
-subList = api.getContent("Help:沙盒").splitlines()
+subList = api.getContent("MGP:萌娘百科月报/月饼/订阅").splitlines()
 for line in subList:
     if not line.startswith("#"):
         print(f"{line} ignored")

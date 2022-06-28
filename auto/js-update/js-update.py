@@ -42,9 +42,8 @@ with open("list.py", "r", encoding="UTF-8") as f:
 logger.info("Got JS list.")
 
 logger.info("Connecting to MGP...")
-with open("passwords.py", "r") as f:
-    CONFIG = eval(f.read())
-api = mwAPI(CONFIG["zh"][0])
+api = mwAPI()
+api.connectWithConfig("passwords.py", "zh")
 logger.info("Connected to MGP.")
 
 for page in LIST:

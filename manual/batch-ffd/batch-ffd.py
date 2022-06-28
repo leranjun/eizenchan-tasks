@@ -1,12 +1,11 @@
 from mwapi import mwAPI
 
 print("Logging in...")
-with open("passwords.py") as f:
-    CONFIG = eval(f.read())
+site = "cm"
 
-api = mwAPI(CONFIG["cm"][0])
-api.login(CONFIG["cm"][1], CONFIG["cm"][2])
-print("Logged in.")
+api = mwAPI()
+api.loginWithConfig("passwords.py", site)
+print("Logged in")
 
 print("Opening list of pages...")
 jobs = []
@@ -34,4 +33,3 @@ with open("error.log", "w") as f:
         api.replace(page, text=r"<noinclude>{{即将删除|代U:Leranjun挂删：用户私人文件|user=Eizenchan}}</noinclude>",
                     bot=True, summary="挂删：用户私人文件", tags="Bot", nocreate=True)
         print("Finished " + page + ".")
-

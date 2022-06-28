@@ -88,10 +88,8 @@ with open("equip_formatted.lua") as f:
     logger.info("Got formatted equip file.")
 
 logger.info("Getting target page...")
-with open("passwords.py", "r") as f:
-    CONFIG = eval(f.read())
-api = mwAPI(CONFIG["zh"][0])
-api.login(CONFIG["zh"][1], CONFIG["zh"][2])
+api = mwAPI()
+api.loginWithConfig("passwords.py", "zh")
 target = api.getContent("Module:碧蓝航线Equips/data")
 if (target != data):
     logger.info("Target page is outdated. Updating target page...")

@@ -59,7 +59,7 @@ class mwAPI:
             if ((name in params) and (not isinstance(params[name], str))):
                 params[name] = "|".join(params[name])
 
-    def __init__(self, url):
+    def __init__(self, url=None):
         # Define API endpoint
         self.url = url
 
@@ -279,6 +279,16 @@ class mwAPI:
         r = self.query(params)
         self.token = r["query"]["tokens"]["csrftoken"]
         self.bot = ("bot" in r["query"]["userinfo"]["groups"])
+
+    def connectWithConfig(self, path, site, login=True):
+        with open(path, "r") as f:
+            PW = eval(f.read())
+        self.url = PW[site][0]
+        if login:
+            self.login(PW[site][1], PW[site][2])
+
+    def loginWithConfig(self, path, site):
+        self.connectWithConfig(path, site, login=True)
 
     def edit(self, page=None, *, pageid=None, suppressAbuseFilter=False, timeout=0.5, **kwargs):
         if (self.token is None):

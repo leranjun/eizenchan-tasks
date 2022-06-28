@@ -43,5 +43,5 @@ for line in subList:
         continue
     target = target.group(1)
     print(f"{line} -> {target}")
-    print(api.append(page=target, text="{{subst:U:Eizenchan/mooncake|foreword=" + str(CONFIG["foreword"]) + "|year=" + str(
-        CONFIG["year"]) + "|month=" + str(CONFIG["month"]) + "|year-zh=" + year_zh + "|month-zh=" + month_zh + "}}", summary="您点的月饼已送达，不要忘了给我们五星好评噢～", tags="Bot", bot=True))
+    api.append(page=target, text="\n{{subst:U:Eizenchan/mooncake|foreword=" + str(CONFIG["foreword"]) + "|year=" + str(
+        CONFIG["year"]) + "|month=" + str(CONFIG["month"]) + "|year-zh=" + year_zh + "|month-zh=" + month_zh + "}}", summary="您点的月饼已送达，不要忘了给我们五星好评噢～", tags="Bot", bot=True)

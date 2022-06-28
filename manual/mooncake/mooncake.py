@@ -19,6 +19,7 @@ def toZhNum(o):
     o = str(o)
     for k, v in ZHNUM:
         o = o.replace(str(k), str(v))
+    return o
 
 
 with open("config.py", "r") as f:

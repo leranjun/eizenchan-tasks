@@ -13,10 +13,13 @@ ZHNUM = {
     (8, "八"),
     (9, "九"),
 }
+
+
 def toZhNum(o):
     o = str(o)
     for k, v in ZHNUM:
         o = o.replace(str(k), str(v))
+
 
 with open("config.py", "r") as f:
     CONFIG = eval(f.read())
@@ -39,5 +42,5 @@ for line in subList:
         continue
     target = target.group(1)
     print(f"{line} -> {target}")
-    print(api.addSection(page=target, text="{{subst:U:Eizenchan/mooncake|foreword=" + str(CONFIG["foreword"]) + "|year=" + str(CONFIG["year"]) + "|month=" + str(CONFIG["month"]) + "}}", summary="您点的月饼已送达，不要忘了给我们五星好评噢～", tag="Bot", bot=True))
-    
+    print(api.append(page=target, text="{{subst:U:Eizenchan/mooncake|foreword=" + str(CONFIG["foreword"]) + "|year=" + str(
+        CONFIG["year"]) + "|month=" + str(CONFIG["month"]) + "|year-zh=" + year_zh + "|month-zh=" + month_zh + "}}", summary="您点的月饼已送达，不要忘了给我们五星好评噢～", tags="Bot", bot=True))

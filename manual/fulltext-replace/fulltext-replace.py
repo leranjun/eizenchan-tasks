@@ -1,6 +1,6 @@
 import re
 import sys
-import traceback
+
 from mwapi import mwAPI
 
 with open("config.py", "r") as f:

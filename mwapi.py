@@ -60,9 +60,15 @@ class mwAPI:
             if name in params and isinstance(params[name], list):
                 params[name] = "|".join(params[name])
 
-    def __init__(self, url=None):
+    def __init__(self, url=None, proxies=None):
         # Define API endpoint
         self.url = url
+        if isinstance(proxies, str):
+            proxies = {
+                "http": proxies,
+                "https": proxies,
+            }
+        self.__s.proxies = proxies
 
     def post(self, params, timeout=None):
         params.update({
@@ -70,7 +76,7 @@ class mwAPI:
         })
 
         r = None
-        while (not r):
+        while not r:
             try:
                 r = self.__s.post(self.url, data=params, timeout=timeout)
                 r = r.json()
@@ -85,7 +91,7 @@ class mwAPI:
         })
 
         r = None
-        while (not r):
+        while not r:
             try:
                 r = self.__s.get(self.url, params=params, timeout=timeout)
                 r = r.json()
@@ -112,7 +118,7 @@ class mwAPI:
             "rvprop": "content",
             "rvslots": "*",
             "redirects": redirects,
-            "converttitles": 1
+            "converttitles": 1,
         }
         r = self.query(params)
         r = list(r["query"]["pages"].values())[0]

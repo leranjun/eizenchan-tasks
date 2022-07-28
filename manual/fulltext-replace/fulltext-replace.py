@@ -3,16 +3,11 @@ import sys
 import traceback
 from mwapi import mwAPI
 
-with open("passwords.py", "r") as f:
-    PW = eval(f.read())
-
 with open("config.py", "r") as f:
     CONFIG = eval(f.read())
 
-site = CONFIG["site"]
-
-api = mwAPI(PW[site][0])
-api.login(PW[site][1], PW[site][2])
+api = mwAPI()
+api.loginWithConfig("passwords.py", CONFIG["site"])
 print("Logged in")
 
 before = CONFIG["before"]

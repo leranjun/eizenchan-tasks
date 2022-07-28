@@ -4,10 +4,8 @@ from mwapi import mwAPI
 with open("config.py", "r") as f:
     CONFIG = eval(f.read())
 
-site = CONFIG["site"]
-
 api = mwAPI()
-api.loginWithConfig("passwords.py", site)
+api.loginWithConfig("passwords.py", CONFIG["site"])
 print("Logged in")
 
 before = CONFIG["before"]

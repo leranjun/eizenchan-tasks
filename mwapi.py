@@ -50,13 +50,14 @@ class mwAPI:
 
     def __joinParam(self, names, params):
         # Convert list to string
-        if (isinstance(names, str)):
+        if isinstance(names, str):
             # Only one parameter needs to be converted
-            if ((names in params) and (not isinstance(params[names], str))):
-                params[names] = "|".join(params[names])
+            names = [names]
 
         for name in names:
-            if ((name in params) and (not isinstance(params[name], str))):
+            if not name in params:
+                raise TypeError(f"Parameter {name} is not found")
+            if isinstance(params[name], list):
                 params[name] = "|".join(params[name])
 
     def __init__(self, url=None):

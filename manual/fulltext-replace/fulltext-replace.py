@@ -35,20 +35,21 @@ for x in pages:
         content = content.replace(before, after)
 
     # time.sleep(5)
-    while True:
-        try:
-            print(api.replace(pageid=x["pageid"],
-                              text=content,
-                              suppressAbuseFilter=True,
-                              bot=True,
-                              minor=True,
-                              summary="文本替换：【" + before + "】→【" + after +
-                              "】",
-                              tags="Bot"))
-            break
-        except KeyboardInterrupt:
-            sys.exit(1)
-        except:
-            traceback.print_exc()
+    try:
+        print(api.replace(
+            pageid=x["pageid"],
+            text=content,
+            suppressAbuseFilter=True,
+            bot=True,
+            minor=True,
+            summary="文本替换：【" + before + "】→【" + after +
+            "】",
+            tags="Bot"
+        ))
+        break
+    except KeyboardInterrupt:
+        sys.exit(1)
+    except Exception as e:
+        print(e)
 
     print("Finished: " + str(x["pageid"]))

@@ -7,6 +7,7 @@ This module contains a class providing methods for establishing a connection to 
   api = mwAPI("https://test.wikipedia.org/w/api.php")
   api.login("botusername", "botpassword")
 """
+import re
 import time
 
 import requests
@@ -100,7 +101,7 @@ class mwAPI:
         return self.get(params)
 
     def getContent(self, page=None, *, pageid=None, redirects=True):
-        if ((page is None) and (pageid is None)):
+        if page is None and pageid is None:
             # No page or pageid specified
             raise TypeError("No page or pageid specified")
 
@@ -115,24 +116,24 @@ class mwAPI:
         }
         r = self.query(params)
         r = list(r["query"]["pages"].values())[0]
-        if ("revisions" in r):
+        if "revisions" in r:
             r = r["revisions"][0]
-            if ("slots" in r):
+            if "slots" in r:
                 return r["slots"]["main"]["*"]
-            elif ("*" in r):
+            elif "*" in r:
                 return r["*"]
             else:
                 raise FormatError
         else:
-            if ("missing" in r):
+            if "missing" in r:
                 raise PageNotFoundError(page or pageid)
-            elif ("invalid" in r):
+            elif "invalid" in r:
                 raise PageNameError(page or pageid)
 
     def listContribs(self, username=None, start=None, end=None, *, recursive=True, **kwargs):
         userid = kwargs.get("userid", None)
         userprefix = kwargs.get("userprefix", None)
-        if ((username is None) and (userid is None) and (userprefix is None)):
+        if username is None and userid is None and userprefix is None:
             # No username, userid or userprefix specified
             raise TypeError("No username, userid or userprefix specified")
 
@@ -149,21 +150,20 @@ class mwAPI:
         r = self.query(params)
 
         res = r["query"]["usercontribs"]
-        if (recursive and ("continue" in r)):
+        if recursive and "continue" in r:
             kwargs["uccontinue"] = r["continue"]["uccontinue"]
             t = self.listContribs(username, start, end, **kwargs)
-            res = (t + res) if (kwargs.get("ucdir", None)
-                                == "newer") else (res + t)
+            res = t + res if kwargs.get("ucdir", None) == "newer" else res + t
 
         return res
 
     def listCategoryMembers(self, category=None, *, pageid=None, recursive=True, **kwargs):
-        if ((category is None) and (pageid is None)):
+        if category is None and pageid is None:
             # No category or pageid specified
             raise TypeError("No category or pageid specified")
 
-        category = (category) if (category.startswith(
-            "Category:")) else ("Category:" + category)
+        category = category if re.match(
+            r"^\[\[(?:Category|分[类類]|cat)\:", category, re.I) else "Category:" + category
 
         params = {
             "cmlimit": "max"
@@ -178,7 +178,7 @@ class mwAPI:
         r = self.query(params)
 
         res = r["query"]["categorymembers"]
-        if (recursive and ("continue" in r)):
+        if recursive and "continue" in r:
             kwargs["cmcontinue"] = r["continue"]["cmcontinue"]
             res = res + \
                 self.listCategoryMembers(category, pageid=pageid, **kwargs)
@@ -198,14 +198,14 @@ class mwAPI:
         r = self.query(params)
 
         res = r["query"]["search"]
-        if (recursive and ("continue" in r)):
+        if recursive and "continue" in r:
             kwargs["sroffset"] = r["continue"]["sroffset"]
             res = res + self.search(query, **kwargs)
 
         return res
 
     def whatLinksHere(self, page=None, *, pageid=None, recursive=True, **kwargs):
-        if ((page is None) and (pageid is None)):
+        if page is None and pageid is None:
             # No page or pageid specified
             raise TypeError("No page or pageid specified")
 
@@ -221,14 +221,14 @@ class mwAPI:
         self.__joinParam("blnamespace", params)
         r = self.query(params)
         res = r["query"]["backlinks"]
-        if (recursive and ("continue" in r)):
+        if recursive and "continue" in r:
             kwargs["blcontinue"] = r["continue"]["blcontinue"]
             res = res + self.whatLinksHere(page, pageid=pageid, **kwargs)
 
         return res
 
     def fileUsage(self, page=None, *, pageid=None, recursive=True, **kwargs):
-        if ((page is None) and (pageid is None)):
+        if page is None and pageid is None:
             # No page or pageid specified
             raise TypeError("No page or pageid specified")
 
@@ -244,7 +244,7 @@ class mwAPI:
         self.__joinParam(["fuprop", "funamespace", "fushow"], params)
         r = self.query(params)
         res = r["query"]["pages"]
-        if (recursive and ("continue" in r)):
+        if recursive and "continue" in r:
             kwargs["fucontinue"] = r["continue"]["fucontinue"]
             res = res + self.fileUsage(page, pageid=pageid, **kwargs)
 
@@ -268,7 +268,7 @@ class mwAPI:
         }
         r = self.post(params)
 
-        if (r["login"]["result"] != "Success"):
+        if r["login"]["result"] != "Success":
             raise APIError(r["login"]["reason"], r["login"]["reason"])
 
         # Get CSRF token and bot info
@@ -291,10 +291,10 @@ class mwAPI:
         self.connectWithConfig(path, site, login=True)
 
     def edit(self, page=None, *, pageid=None, suppressAbuseFilter=False, timeout=0.5, **kwargs):
-        if (self.token is None):
+        if self.token is None:
             raise LoginError
 
-        if ((page is None) and (pageid is None)):
+        if page is None and pageid is None:
             # No page or pageid specified
             raise TypeError("No page or pageid specified")
 
@@ -309,7 +309,7 @@ class mwAPI:
         r = self.query(params)
 
         base = list(r["query"]["pages"].values())[0]
-        if ("revisions" in base):
+        if "revisions" in base:
             base = base["revisions"][0]["timestamp"]
         else:
             base = None
@@ -329,22 +329,22 @@ class mwAPI:
         self.__joinParam("tags", params)
         r = self.post(params, timeout)
 
-        if ("error" in r):
+        if "error" in r:
             code = r["error"]["code"]
-            if (code == "missingtitle"):
+            if code == "missingtitle":
                 raise PageNotFoundError(page or pageid)
-            elif (code == "invalidtitle"):
+            elif code == "invalidtitle":
                 raise PageNameError(page or pageid)
             else:
                 raise APIError(r["error"]["info"], code)
 
-        if (r["edit"]["result"] == "Failure"):
-            if (r["edit"]["code"] == "abusefilter-warning") and (suppressAbuseFilter):
+        if r["edit"]["result"] == "Failure":
+            if r["edit"]["code"] == "abusefilter-warning" and suppressAbuseFilter:
                 self.edit(
                     page, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
             else:
                 raise APIError(r["edit"]["info"], r["edit"]["code"])
-        elif (r["edit"]["result"] == "Success"):
+        elif r["edit"]["result"] == "Success":
             return r["edit"]
 
     def replace(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
@@ -363,10 +363,10 @@ class mwAPI:
         return self.edit(page, section=0, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
 
     def move(self, before=None, after=None, reason=None, *, beforeid=None, talk=True, subpages=True, redirect=False, **kwargs):
-        if (self.token is None):
+        if self.token is None:
             raise LoginError
 
-        if (((before is None) and (beforeid is None)) or (after is None)):
+        if (before is None and beforeid is None) or (after is None):
             # No page or pageid specified
             raise TypeError("No page or pageid specified")
 
@@ -385,11 +385,11 @@ class mwAPI:
         self.__joinParam("tags", params)
         r = self.post(params, 0.5)
 
-        if ("error" in r):
+        if "error" in r:
             code = r["error"]["code"]
-            if (code == "missingtitle"):
+            if code == "missingtitle":
                 raise PageNotFoundError(before or beforeid)
-            elif (code == "invalidtitle"):
+            elif code == "invalidtitle":
                 raise PageNameError(before or beforeid)
             else:
                 raise APIError(r["error"]["info"], code)

@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "mooncake",
-        "mwapi"
+        "mwapi",
+        "fulltext-replace"
     ]
 }

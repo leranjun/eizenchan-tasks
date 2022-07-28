@@ -7,8 +7,9 @@ This module contains a class providing methods for establishing a connection to 
   api = mwAPI("https://test.wikipedia.org/w/api.php")
   api.login("botusername", "botpassword")
 """
-import requests
 import time
+
+import requests
 
 
 class APIError(Exception):
@@ -55,9 +56,7 @@ class mwAPI:
             names = [names]
 
         for name in names:
-            if not name in params:
-                raise TypeError(f"Parameter {name} is not found")
-            if isinstance(params[name], list):
+            if name in params and isinstance(params[name], list):
                 params[name] = "|".join(params[name])
 
     def __init__(self, url=None):

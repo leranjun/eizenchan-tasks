@@ -60,6 +60,13 @@ class mwAPI:
             if name in params and isinstance(params[name], list):
                 params[name] = "|".join(params[name])
 
+    def __checkPage(self, page, pageid):
+        if page is None and pageid is None:
+            raise TypeError("No page or pageid specified")
+
+        if page is not None and pageid is not None:
+            raise APIError("Both page and pageid specified", "invalidparammix")
+
     def __init__(self, url=None, proxies=None):
         # Define API endpoint
         self.url = url
@@ -107,9 +114,7 @@ class mwAPI:
         return self.get(params)
 
     def getContent(self, page=None, *, pageid=None, redirects=True):
-        if page is None and pageid is None:
-            # No page or pageid specified
-            raise TypeError("No page or pageid specified")
+        self.__checkPage(page, pageid)
 
         params = {
             "prop": "revisions",
@@ -164,12 +169,11 @@ class mwAPI:
         return res
 
     def listCategoryMembers(self, category=None, *, pageid=None, recursive=True, **kwargs):
-        if category is None and pageid is None:
-            # No category or pageid specified
-            raise TypeError("No category or pageid specified")
+        self.__checkPage(category, pageid)
 
-        category = category if re.match(
-            r"^\[\[(?:Category|分[类類]|cat)\:", category, re.I) else "Category:" + category
+        if category is not None:
+            category = category if re.match(
+                r"^\[\[(?:Category|分[类類]|cat)\:", category, re.I) else "Category:" + category
 
         params = {
             "cmlimit": "max"
@@ -211,9 +215,7 @@ class mwAPI:
         return res
 
     def whatLinksHere(self, page=None, *, pageid=None, recursive=True, **kwargs):
-        if page is None and pageid is None:
-            # No page or pageid specified
-            raise TypeError("No page or pageid specified")
+        self.__checkPage(page, pageid)
 
         params = {
             "bllimit": "max"
@@ -234,9 +236,7 @@ class mwAPI:
         return res
 
     def fileUsage(self, page=None, *, pageid=None, recursive=True, **kwargs):
-        if page is None and pageid is None:
-            # No page or pageid specified
-            raise TypeError("No page or pageid specified")
+        self.__checkPage(page, pageid)
 
         params = {
             "fulimit": "max"
@@ -300,9 +300,7 @@ class mwAPI:
         if self.token is None:
             raise LoginError
 
-        if page is None and pageid is None:
-            # No page or pageid specified
-            raise TypeError("No page or pageid specified")
+        self.__checkPage(page, pageid)
 
         # Retrieve a timestamp for the base revision to prevent edit conflict
         params = {
@@ -372,9 +370,9 @@ class mwAPI:
         if self.token is None:
             raise LoginError
 
-        if (before is None and beforeid is None) or (after is None):
-            # No page or pageid specified
-            raise TypeError("No page or pageid specified")
+        self.__checkPage(before, beforeid)
+        if after is None:
+            raise TypeError("No page name specified for the destination")
 
         params = kwargs
         params.update({

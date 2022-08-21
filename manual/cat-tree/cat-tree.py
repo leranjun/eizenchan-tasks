@@ -2,7 +2,7 @@ from mwapi import mwAPI
 from collections import deque
 import json
 
-api = mwAPI(proxies="http://127.0.0.1:7890")
+api = mwAPI()
 api.loginWithConfig("passwords.py", "zh")
 print("Logged in")
 

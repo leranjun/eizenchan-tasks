@@ -19,6 +19,21 @@ ZHNUM = {
     (9, "九"),
 }
 
+ZHMO = {
+    1: "一",
+    2: "二",
+    3: "三",
+    4: "四",
+    5: "五",
+    6: "六",
+    7: "七",
+    8: "八",
+    9: "九",
+    10: "十",
+    11: "十一",
+    12: "十二",
+}
+
 
 def toZhNum(o):
     o = str(o)
@@ -30,12 +45,15 @@ def toZhNum(o):
 with open("config.py", "r") as f:
     CONFIG = eval(f.read())
 
+if CONFIG["month"] not in ZHMO:
+    raise ValueError("Invalid month")
+
 api = mwAPI()
 api.loginWithConfig("passwords.py", "zh")
 print("Logged in")
 
 year_zh = toZhNum(CONFIG["year"])
-month_zh = toZhNum(CONFIG["month"])
+month_zh = ZHMO[CONFIG["month"]]
 
 subList = api.getContent("MGP:萌娘百科月报/月饼/订阅").splitlines()
 for line in subList:

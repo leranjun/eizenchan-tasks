@@ -8,6 +8,7 @@ This module contains a class providing methods for establishing a connection to 
   api.login("botusername", "botpassword")
 """
 import re
+import sys
 import time
 
 import requests
@@ -90,6 +91,9 @@ class mwAPI:
                 r = r.json()
             except requests.exceptions.Timeout:
                 pass
+            except requests.exceptions.HTTPError:
+                print(r.text, file=sys.stderr)
+                raise
 
         return r
 
@@ -106,6 +110,9 @@ class mwAPI:
                 r = r.json()
             except requests.exceptions.Timeout:
                 pass
+            except requests.exceptions.HTTPError:
+                print(r.text, file=sys.stderr)
+                raise
 
         return r
 

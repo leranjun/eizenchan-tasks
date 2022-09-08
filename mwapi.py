@@ -87,6 +87,7 @@ class mwAPI:
         while not r:
             try:
                 r = self.__s.post(self.url, data=params, timeout=timeout)
+                r.encoding = r.apparent_encoding
                 r.raise_for_status()
                 r = r.json()
             except requests.exceptions.Timeout:
@@ -106,6 +107,7 @@ class mwAPI:
         while not r:
             try:
                 r = self.__s.get(self.url, params=params, timeout=timeout)
+                r.encoding = r.apparent_encoding
                 r.raise_for_status()
                 r = r.json()
             except requests.exceptions.Timeout:

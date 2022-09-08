@@ -1,6 +1,7 @@
-from mwapi import mwAPI
-import re
 import argparse
+import re
+
+from mwapi import mwAPI
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dry", action="store_true", help="dry run")
@@ -75,4 +76,5 @@ for line in subList:
         summary="您点的月饼已送达，不要忘了给我们五星好评噢～",
         tags="Bot",
         bot=True,
+        timeout=60,
     )

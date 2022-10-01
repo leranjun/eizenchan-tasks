@@ -46,6 +46,9 @@ def toZhNum(o):
 with open("config.py", "r") as f:
     CONFIG = eval(f.read())
 
+with open("ignore.txt", "r") as f:
+    IGNORE = set(f.read().splitlines())
+
 if CONFIG["month"] not in ZHMO:
     raise ValueError("Invalid month")
 
@@ -67,12 +70,16 @@ for line in subList:
         continue
     target = target.group(1)
     print(f"{line} -> {target}")
+    if target in IGNORE:
+        print(f"{target} ignored")
+        continue
     if args.dry:
         continue
     api.append(
         page=target,
-        text="\n{{" +
-        f'subst:U:Eizenchan/mooncake|foreword={str(CONFIG["foreword"])}|year={str(CONFIG["year"])}|month={str(CONFIG["month"])}|year-zh={year_zh}|month-zh={month_zh}' + "}}",
+        text="\n{{"
+        + f'subst:U:Eizenchan/mooncake|foreword={str(CONFIG["foreword"])}|year={str(CONFIG["year"])}|month={str(CONFIG["month"])}|year-zh={year_zh}|month-zh={month_zh}'
+        + "}}",
         summary="您点的月饼已送达，不要忘了给我们五星好评噢～",
         tags="Bot",
         bot=True,

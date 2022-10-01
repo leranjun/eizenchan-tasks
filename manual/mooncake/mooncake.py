@@ -88,5 +88,6 @@ with open("ignore.txt", "a") as f:
         )
         f.write(f"{target}\n")
 
-with open("ignore.txt", "w") as f:
-    f.write("")
+if not args.dry:
+    with open("ignore.txt", "w") as f:
+        f.write("")

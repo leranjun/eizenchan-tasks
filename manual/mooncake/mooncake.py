@@ -60,28 +60,33 @@ year_zh = toZhNum(CONFIG["year"])
 month_zh = ZHMO[CONFIG["month"]]
 
 subList = api.getContent("MGP:萌娘百科月报/月饼/订阅").splitlines()
-for line in subList:
-    if not line.startswith("#"):
-        print(f"{line} ignored")
-        continue
-    target = re.search(r"\[\[(.*?)\]\]", line)
-    if target is None:
-        print(f"{line} ignored")
-        continue
-    target = target.group(1)
-    print(f"{line} -> {target}")
-    if target in IGNORE:
-        print(f"{target} ignored")
-        continue
-    if args.dry:
-        continue
-    api.append(
-        page=target,
-        text="\n{{"
-        + f'subst:U:Eizenchan/mooncake|foreword={str(CONFIG["foreword"])}|year={str(CONFIG["year"])}|month={str(CONFIG["month"])}|year-zh={year_zh}|month-zh={month_zh}'
-        + "}}",
-        summary="您点的月饼已送达，不要忘了给我们五星好评噢～",
-        tags="Bot",
-        bot=True,
-        timeout=60,
-    )
+with open("ignore.txt", "a") as f:
+    for line in subList:
+        if not line.startswith("#"):
+            print(f"{line} ignored")
+            continue
+        target = re.search(r"\[\[(.*?)\]\]", line)
+        if target is None:
+            print(f"{line} ignored")
+            continue
+        target = target.group(1)
+        print(f"{line} -> {target}")
+        if target in IGNORE:
+            print(f"{target} ignored")
+            continue
+        if args.dry:
+            continue
+        api.append(
+            page=target,
+            text="\n{{"
+            + f'subst:U:Eizenchan/mooncake|foreword={str(CONFIG["foreword"])}|year={str(CONFIG["year"])}|month={str(CONFIG["month"])}|year-zh={year_zh}|month-zh={month_zh}'
+            + "}}",
+            summary="您点的月饼已送达，不要忘了给我们五星好评噢～",
+            tags="Bot",
+            bot=True,
+            timeout=60,
+        )
+        f.write(f"{target}\n")
+
+with open("ignore.txt", "w") as f:
+    f.write("")

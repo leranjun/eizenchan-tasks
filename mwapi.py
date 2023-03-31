@@ -140,10 +140,9 @@ class mwAPI:
             r = r["revisions"][0]
             if "slots" in r:
                 return r["slots"]["main"]["*"]
-            elif "*" in r:
+            if "*" in r:
                 return r["*"]
-            else:
-                raise FormatError
+            raise FormatError
         else:
             if "missing" in r:
                 raise PageNotFoundError(page or pageid)

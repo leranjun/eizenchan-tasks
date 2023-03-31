@@ -7,6 +7,7 @@ This module contains a class providing methods for establishing a connection to 
   api = mwAPI("https://test.wikipedia.org/w/api.php")
   api.login("botusername", "botpassword")
 """
+import ast
 import re
 import sys
 import time
@@ -271,7 +272,7 @@ class mwAPI:
 
     def connectWithConfig(self, path, site, login=True):
         with open(path, "r") as f:
-            PW = eval(f.read())
+            PW = ast.literal_eval(f.read())
         self.url = PW[site][0]
         if login:
             self.login(PW[site][1], PW[site][2])

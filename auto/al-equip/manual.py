@@ -1,3 +1,4 @@
+import ast
 import logging
 
 from mwapi import mwAPI
@@ -22,7 +23,7 @@ with open("equip_formatted.lua") as f:
 
 logger.info("Getting target page...")
 with open("passwords.py", "r") as f:
-    CONFIG = eval(f.read())
+    CONFIG = ast.literal_eval(f.read())
 api = mwAPI(CONFIG["zh"][0])
 api.login(CONFIG["zh"][1], CONFIG["zh"][2])
 target = api.getContent("Module:碧蓝航线Equips/data")

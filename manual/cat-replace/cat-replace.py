@@ -1,9 +1,10 @@
+import ast
 import re
 
 from mwapi import mwAPI
 
 with open("config.py", "r") as f:
-    CONFIG = eval(f.read())
+    CONFIG = ast.literal_eval(f.read())
 
 api = mwAPI()
 api.loginWithConfig("passwords.py", CONFIG["site"])

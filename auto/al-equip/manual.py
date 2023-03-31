@@ -1,5 +1,4 @@
 import logging
-import sys
 
 from mwapi import mwAPI
 

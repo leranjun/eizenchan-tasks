@@ -35,7 +35,6 @@ for x in pages:
     else:
         content = content.replace(before, after)
 
-    # time.sleep(5)
     try:
         print(
             api.replace(

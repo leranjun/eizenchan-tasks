@@ -30,6 +30,12 @@ with open("error.log", "w") as f:
         #     f.write(page + "backlinks\n")
         #     continue
         print("Flagging " + page + " for deletion...")
-        api.replace(page, text=r"<noinclude>{{即将删除|代U:Leranjun挂删：用户私人文件|user=Eizenchan}}</noinclude>",
-                    bot=True, summary="挂删：用户私人文件", tags="Bot", nocreate=True)
+        api.replace(
+            page,
+            text=r"<noinclude>{{即将删除|代U:Leranjun挂删：用户私人文件|user=Eizenchan}}</noinclude>",
+            bot=True,
+            summary="挂删：用户私人文件",
+            tags="Bot",
+            nocreate=True,
+        )
         print("Finished " + page + ".")

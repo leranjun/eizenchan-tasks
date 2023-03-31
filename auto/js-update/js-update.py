@@ -1,13 +1,15 @@
-from sys import exit
 import logging
-from mwapi import mwAPI
-import subprocess
 import os
+import subprocess
 from errno import EEXIST
+from sys import exit
+
+from mwapi import mwAPI
 
 with open(".control", "r") as f:
-    if (f.read().strip() == "off"):
+    if f.read().strip() == "off":
         exit(0)
+
 
 def mkdir_p(path):
     try:
@@ -28,7 +30,8 @@ logging.basicConfig(
     filename="log.txt",
     filemode="w",
     level="INFO",
-    format="%(asctime)s (%(name)s) - %(levelname)s: %(message)s")
+    format="%(asctime)s (%(name)s) - %(levelname)s: %(message)s",
+)
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()

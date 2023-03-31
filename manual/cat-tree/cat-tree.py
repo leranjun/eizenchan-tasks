@@ -1,6 +1,7 @@
-from mwapi import mwAPI
-from collections import deque
 import json
+from collections import deque
+
+from mwapi import mwAPI
 
 api = mwAPI()
 api.loginWithConfig("passwords.py", "zh")
@@ -22,11 +23,7 @@ while q:
             subcats.append(page["pageid"])
         else:
             subpage += 1
-    output[id] = {
-        "title": title,
-        "subcats": subcats,
-        "subpage": subpage
-    }
+    output[id] = {"title": title, "subcats": subcats, "subpage": subpage}
 
 # save output to JSON file
 with open("cat-tree.json", "w") as f:

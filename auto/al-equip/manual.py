@@ -1,12 +1,14 @@
-import sys
 import logging
+import sys
+
 from mwapi import mwAPI
 
 logging.basicConfig(
     filename="log.txt",
     filemode="w",
     level="INFO",
-    format="%(asctime)s (%(name)s) - %(levelname)s: %(message)s")
+    format="%(asctime)s (%(name)s) - %(levelname)s: %(message)s",
+)
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -26,11 +28,13 @@ api = mwAPI(CONFIG["zh"][0])
 api.login(CONFIG["zh"][1], CONFIG["zh"][2])
 target = api.getContent("Module:碧蓝航线Equips/data")
 logger.info("Updating target page...")
-api.edit("Module:碧蓝航线Equips/data",
-         text=data,
-         bot=True,
-         minor=True,
-         summary="更新数据",
-         tags="Bot")
+api.edit(
+    "Module:碧蓝航线Equips/data",
+    text=data,
+    bot=True,
+    minor=True,
+    summary="更新数据",
+    tags="Bot",
+)
 
 logger.info("Task finished successfully.")

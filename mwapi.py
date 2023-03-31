@@ -79,9 +79,7 @@ class mwAPI:
         self.__s.proxies = proxies
 
     def post(self, params, timeout=None):
-        params.update({
-            "format": "json"
-        })
+        params.update({"format": "json"})
 
         r = None
         while not r:
@@ -99,9 +97,7 @@ class mwAPI:
         return r
 
     def get(self, params, timeout=None):
-        params.update({
-            "format": "json"
-        })
+        params.update({"format": "json"})
 
         r = None
         while not r:
@@ -119,9 +115,11 @@ class mwAPI:
         return r
 
     def query(self, params):
-        params.update({
-            "action": "query",
-        })
+        params.update(
+            {
+                "action": "query",
+            }
+        )
         return self.get(params)
 
     def getContent(self, page=None, *, pageid=None, redirects=True):
@@ -152,23 +150,20 @@ class mwAPI:
             elif "invalid" in r:
                 raise PageNameError(page or pageid)
 
-    def listContribs(self, username=None, start=None, end=None, *, recursive=True, **kwargs):
+    def listContribs(
+        self, username=None, start=None, end=None, *, recursive=True, **kwargs
+    ):
         userid = kwargs.get("userid", None)
         userprefix = kwargs.get("userprefix", None)
         if username is None and userid is None and userprefix is None:
             # No username, userid or userprefix specified
             raise TypeError("No username, userid or userprefix specified")
 
-        params = {
-            "uclimit": "max"
-        }
+        params = {"uclimit": "max"}
         params.update(kwargs)
-        params.update({
-            "list": "usercontribs",
-            "ucuser": username,
-            "ucstart": start,
-            "ucend": end
-        })
+        params.update(
+            {"list": "usercontribs", "ucuser": username, "ucstart": start, "ucend": end}
+        )
         r = self.query(params)
 
         res = r["query"]["usercontribs"]
@@ -179,42 +174,37 @@ class mwAPI:
 
         return res
 
-    def listCategoryMembers(self, category=None, *, pageid=None, recursive=True, **kwargs):
+    def listCategoryMembers(
+        self, category=None, *, pageid=None, recursive=True, **kwargs
+    ):
         self.__checkPage(category, pageid)
 
         if category is not None:
-            category = category if re.match(
-                r"^\[\[(?:Category|分[类類]|cat)\:", category, re.I) else "Category:" + category
+            category = (
+                category
+                if re.match(r"^\[\[(?:Category|分[类類]|cat)\:", category, re.I)
+                else "Category:" + category
+            )
 
-        params = {
-            "cmlimit": "max"
-        }
+        params = {"cmlimit": "max"}
         params.update(kwargs)
-        params.update({
-            "list": "categorymembers",
-            "cmtitle": category,
-            "cmpageid": pageid
-        })
+        params.update(
+            {"list": "categorymembers", "cmtitle": category, "cmpageid": pageid}
+        )
         self.__joinParam(["cmprop", "cmnamespace", "cmtype"], params)
         r = self.query(params)
 
         res = r["query"]["categorymembers"]
         if recursive and "continue" in r:
             kwargs["cmcontinue"] = r["continue"]["cmcontinue"]
-            res = res + \
-                self.listCategoryMembers(category, pageid=pageid, **kwargs)
+            res = res + self.listCategoryMembers(category, pageid=pageid, **kwargs)
 
         return res
 
     def search(self, query, *, recursive=True, **kwargs):
-        params = {
-            "srlimit": "max"
-        }
+        params = {"srlimit": "max"}
         params.update(kwargs)
-        params.update({
-            "list": "search",
-            "srsearch": query
-        })
+        params.update({"list": "search", "srsearch": query})
         self.__joinParam(["srnamespace", "srinfo", "srprop"], params)
         r = self.query(params)
 
@@ -228,15 +218,9 @@ class mwAPI:
     def whatLinksHere(self, page=None, *, pageid=None, recursive=True, **kwargs):
         self.__checkPage(page, pageid)
 
-        params = {
-            "bllimit": "max"
-        }
+        params = {"bllimit": "max"}
         params.update(kwargs)
-        params.update({
-            "list": "backlinks",
-            "bltitle": page,
-            "blpageid": pageid
-        })
+        params.update({"list": "backlinks", "bltitle": page, "blpageid": pageid})
         self.__joinParam("blnamespace", params)
         r = self.query(params)
         res = r["query"]["backlinks"]
@@ -249,15 +233,9 @@ class mwAPI:
     def fileUsage(self, page=None, *, pageid=None, recursive=True, **kwargs):
         self.__checkPage(page, pageid)
 
-        params = {
-            "fulimit": "max"
-        }
+        params = {"fulimit": "max"}
         params.update(kwargs)
-        params.update({
-            "prop": "fileusage",
-            "titles": page,
-            "pageids": pageid
-        })
+        params.update({"prop": "fileusage", "titles": page, "pageids": pageid})
         self.__joinParam(["fuprop", "funamespace", "fushow"], params)
         r = self.query(params)
         res = r["query"]["pages"]
@@ -269,10 +247,7 @@ class mwAPI:
 
     def login(self, username, password):
         # Get login token
-        params = {
-            "meta": "tokens",
-            "type": "login"
-        }
+        params = {"meta": "tokens", "type": "login"}
         r = self.query(params)
         self.lgtoken = r["query"]["tokens"]["logintoken"]
 
@@ -281,7 +256,7 @@ class mwAPI:
             "action": "login",
             "lgname": username,
             "lgpassword": password,
-            "lgtoken": self.lgtoken
+            "lgtoken": self.lgtoken,
         }
         r = self.post(params)
 
@@ -289,13 +264,10 @@ class mwAPI:
             raise APIError(r["login"]["reason"], r["login"]["reason"])
 
         # Get CSRF token and bot info
-        params = {
-            "meta": "tokens|userinfo",
-            "uiprop": "groups"
-        }
+        params = {"meta": "tokens|userinfo", "uiprop": "groups"}
         r = self.query(params)
         self.token = r["query"]["tokens"]["csrftoken"]
-        self.bot = ("bot" in r["query"]["userinfo"]["groups"])
+        self.bot = "bot" in r["query"]["userinfo"]["groups"]
 
     def connectWithConfig(self, path, site, login=True):
         with open(path, "r") as f:
@@ -307,7 +279,15 @@ class mwAPI:
     def loginWithConfig(self, path, site):
         self.connectWithConfig(path, site, login=True)
 
-    def edit(self, page=None, *, pageid=None, suppressAbuseFilter=False, timeout=0.5, **kwargs):
+    def edit(
+        self,
+        page=None,
+        *,
+        pageid=None,
+        suppressAbuseFilter=False,
+        timeout=0.5,
+        **kwargs
+    ):
         if self.token is None:
             raise LoginError
 
@@ -319,7 +299,7 @@ class mwAPI:
             "titles": page,
             "pageids": pageid,
             "rvprop": "timestamp",
-            "rvslots": "*"
+            "rvslots": "*",
         }
         r = self.query(params)
 
@@ -329,18 +309,18 @@ class mwAPI:
         else:
             base = None
 
-        params = {
-            "bot": self.bot
-        }
+        params = {"bot": self.bot}
         params.update(kwargs)
-        params.update({
-            "action": "edit",
-            "title": page,
-            "pageid": pageid,
-            "token": self.token,
-            "basetimestamp": base,
-            "starttimestamp": int(time.time())
-        })
+        params.update(
+            {
+                "action": "edit",
+                "title": page,
+                "pageid": pageid,
+                "token": self.token,
+                "basetimestamp": base,
+                "starttimestamp": int(time.time()),
+            }
+        )
         self.__joinParam("tags", params)
         r = self.post(params, timeout)
 
@@ -355,29 +335,60 @@ class mwAPI:
 
         if r["edit"]["result"] == "Failure":
             if r["edit"]["code"] == "abusefilter-warning" and suppressAbuseFilter:
-                self.edit(
-                    page, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+                self.edit(page, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
             else:
                 raise APIError(r["edit"]["info"], r["edit"]["code"])
         elif r["edit"]["result"] == "Success":
             return r["edit"]
 
     def replace(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
-        return self.edit(page, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+        return self.edit(
+            page, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs
+        )
 
     def append(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
-        return self.edit(page, appendtext=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+        return self.edit(
+            page, appendtext=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs
+        )
 
     def prepend(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
-        return self.edit(page, prependtext=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+        return self.edit(
+            page, prependtext=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs
+        )
 
-    def addSection(self, page=None, title=None, text=None, *, suppressAbuseFilter=False, **kwargs):
-        return self.edit(page, section="new", sectiontitle=title, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+    def addSection(
+        self, page=None, title=None, text=None, *, suppressAbuseFilter=False, **kwargs
+    ):
+        return self.edit(
+            page,
+            section="new",
+            sectiontitle=title,
+            text=text,
+            suppressAbuseFilter=suppressAbuseFilter,
+            **kwargs
+        )
 
     def replaceTop(self, page=None, text=None, *, suppressAbuseFilter=False, **kwargs):
-        return self.edit(page, section=0, text=text, suppressAbuseFilter=suppressAbuseFilter, **kwargs)
+        return self.edit(
+            page,
+            section=0,
+            text=text,
+            suppressAbuseFilter=suppressAbuseFilter,
+            **kwargs
+        )
 
-    def move(self, before=None, after=None, reason=None, *, beforeid=None, talk=True, subpages=True, redirect=False, **kwargs):
+    def move(
+        self,
+        before=None,
+        after=None,
+        reason=None,
+        *,
+        beforeid=None,
+        talk=True,
+        subpages=True,
+        redirect=False,
+        **kwargs
+    ):
         if self.token is None:
             raise LoginError
 
@@ -386,17 +397,19 @@ class mwAPI:
             raise TypeError("No page name specified for the destination")
 
         params = kwargs
-        params.update({
-            "action": "move",
-            "from": before,
-            "fromid": beforeid,
-            "to": after,
-            "reason": reason,
-            "movetalk": talk,
-            "movesubpages": subpages,
-            "noredirect": (not redirect),
-            "token": self.token
-        })
+        params.update(
+            {
+                "action": "move",
+                "from": before,
+                "fromid": beforeid,
+                "to": after,
+                "reason": reason,
+                "movetalk": talk,
+                "movesubpages": subpages,
+                "noredirect": (not redirect),
+                "token": self.token,
+            }
+        )
         self.__joinParam("tags", params)
         r = self.post(params, 0.5)
 

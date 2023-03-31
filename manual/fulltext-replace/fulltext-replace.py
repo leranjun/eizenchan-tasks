@@ -26,7 +26,8 @@ for x in pages:
 
     # Remove random unicode character
     content = re.sub(
-        r"[\u1680\u180E\u2000-\u200B\u200E\u200F\u2028-\u202F\u205F]+", "", content)
+        r"[\u1680\u180E\u2000-\u200B\u200E\u200F\u2028-\u202F\u205F]+", "", content
+    )
     content = re.sub(r"([^\xA0])\xA0([^\xA0])", r"\1 \2", content)
 
     if isRegEx:
@@ -36,16 +37,17 @@ for x in pages:
 
     # time.sleep(5)
     try:
-        print(api.replace(
-            pageid=x["pageid"],
-            text=content,
-            suppressAbuseFilter=True,
-            bot=True,
-            minor=True,
-            summary="文本替换：【" + before + "】→【" + after +
-            "】",
-            tags="Bot"
-        ))
+        print(
+            api.replace(
+                pageid=x["pageid"],
+                text=content,
+                suppressAbuseFilter=True,
+                bot=True,
+                minor=True,
+                summary="文本替换：【" + before + "】→【" + after + "】",
+                tags="Bot",
+            )
+        )
         break
     except KeyboardInterrupt:
         sys.exit(1)

@@ -1,18 +1,21 @@
-import sys
 import logging
 import subprocess
+import sys
+
 from github import Github
+
 from mwapi import mwAPI
 
 with open(".control", "r") as f:
-    if (f.read().strip() == "off"):
+    if f.read().strip() == "off":
         sys.exit(0)
 
 logging.basicConfig(
     filename="log.txt",
     filemode="w",
     level="INFO",
-    format="%(asctime)s (%(name)s) - %(levelname)s: %(message)s")
+    format="%(asctime)s (%(name)s) - %(levelname)s: %(message)s",
+)
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -30,7 +33,7 @@ commit = repo.get_branch("master").commit
 open("commit.txt", "a").close()
 with open("commit.txt", "r+") as f:
     base = f.read()
-    if (base == commit.sha):
+    if base == commit.sha:
         logger.info("No new commits.")
         logger.info("Task finished successfully.")
         sys.exit(0)
@@ -48,7 +51,7 @@ content = repo.get_contents("zh-CN/sharecfg/equip_data_statistics.lua")
 content = content.decoded_content.decode("utf-8")
 open("ESF/dat/equip_data_statistics.lua", "w").close()
 with open("ESF/dat/equip_data_statistics.lua", "r+") as f:
-    if (f.read() != content):
+    if f.read() != content:
         nochange = False
         f.seek(0)
         f.write(content)
@@ -64,7 +67,7 @@ for content in contents:
     content = content.decoded_content.decode("utf-8")
     open("ESF/dat/" + name, "w").close()
     with open("ESF/dat/" + name, "r+") as f:
-        if (f.read() != content):
+        if f.read() != content:
             f.seek(0)
             f.write(content)
             f.truncate()
@@ -91,14 +94,16 @@ logger.info("Getting target page...")
 api = mwAPI()
 api.loginWithConfig("passwords.py", "zh")
 target = api.getContent("Module:碧蓝航线Equips/data")
-if (target != data):
+if target != data:
     logger.info("Target page is outdated. Updating target page...")
-    api.edit("Module:碧蓝航线Equips/data",
-             text=data,
-             bot=True,
-             minor=True,
-             summary="更新数据",
-             tags="Bot")
+    api.edit(
+        "Module:碧蓝航线Equips/data",
+        text=data,
+        bot=True,
+        minor=True,
+        summary="更新数据",
+        tags="Bot",
+    )
 else:
     logger.info("Target page is already up to date.")
 

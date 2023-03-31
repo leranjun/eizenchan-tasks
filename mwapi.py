@@ -143,11 +143,10 @@ class mwAPI:
             if "*" in r:
                 return r["*"]
             raise FormatError
-        else:
-            if "missing" in r:
-                raise PageNotFoundError(page or pageid)
-            if "invalid" in r:
-                raise PageNameError(page or pageid)
+        if "missing" in r:
+            raise PageNotFoundError(page or pageid)
+        if "invalid" in r:
+            raise PageNameError(page or pageid)
 
     def listContribs(
         self, username=None, start=None, end=None, *, recursive=True, **kwargs
@@ -418,5 +417,4 @@ class mwAPI:
             if code == "invalidtitle":
                 raise PageNameError(before or beforeid)
             raise APIError(r["error"]["info"], code)
-        else:
-            return r["move"]
+        return r["move"]

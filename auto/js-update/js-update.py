@@ -1,29 +1,15 @@
+"""Update JS files on MGP."""
+
 import logging
-import os
 import subprocess
-from errno import EEXIST
-from sys import exit
+import sys
+from pathlib import Path
 
 from mwapi import mwAPI
 
-with open(".control", "r") as f:
+with open(".control", "r", encoding="utf-8") as f:
     if f.read().strip() == "off":
-        exit(0)
-
-
-def mkdir_p(path):
-    try:
-        os.makedirs(path)
-    except OSError as exc:
-        if exc.errno == EEXIST and os.path.isdir(path):
-            pass
-        else:
-            raise
-
-
-def safe_open_w(path, mode="r", **kwargs):
-    mkdir_p(os.path.dirname(path))
-    return open(path, mode, **kwargs)
+        sys.exit(0)
 
 
 logging.basicConfig(
@@ -50,15 +36,17 @@ api.connectWithConfig("passwords.py", "zh")
 logger.info("Connected to MGP.")
 
 for page in LIST:
-    logger.info("Getting " + page + "...")
+    logger.info("Getting %s...", page)
     content = api.getContent(page)
     escaped = page.replace(":", "/")
-    with safe_open_w("js/" + escaped, "w", encoding="utf-8") as f:
-        f.write(content)
-    logger.info("Finished " + page + ".")
+    path = Path("js/" + escaped)
+    path.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(str(content))
+    logger.info("Finished %s.", page)
 
 logger.info("Running bash script...")
-rc = subprocess.call("./js-update.sh", shell=True)
+subprocess.call("./js-update.sh", shell=True)
 logger.info("Finished running bash script.")
 
 logger.info("Task finished successfully.")

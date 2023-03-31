@@ -51,7 +51,8 @@ class mwAPI:
     token = None
     bot = False
 
-    def __joinParam(self, names, params):
+    @staticmethod
+    def __joinParam(names, params):
         # Convert list to string
         if isinstance(names, str):
             # Only one parameter needs to be converted
@@ -61,7 +62,8 @@ class mwAPI:
             if name in params and isinstance(params[name], list):
                 params[name] = "|".join(params[name])
 
-    def __checkPage(self, page, pageid):
+    @staticmethod
+    def __checkPage(page, pageid):
         if page is None and pageid is None:
             raise TypeError("No page or pageid specified")
 

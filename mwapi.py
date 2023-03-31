@@ -147,7 +147,7 @@ class mwAPI:
         else:
             if "missing" in r:
                 raise PageNotFoundError(page or pageid)
-            elif "invalid" in r:
+            if "invalid" in r:
                 raise PageNameError(page or pageid)
 
     def listContribs(
@@ -328,10 +328,9 @@ class mwAPI:
             code = r["error"]["code"]
             if code == "missingtitle":
                 raise PageNotFoundError(page or pageid)
-            elif code == "invalidtitle":
+            if code == "invalidtitle":
                 raise PageNameError(page or pageid)
-            else:
-                raise APIError(r["error"]["info"], code)
+            raise APIError(r["error"]["info"], code)
 
         if r["edit"]["result"] == "Failure":
             if r["edit"]["code"] == "abusefilter-warning" and suppressAbuseFilter:
@@ -417,9 +416,8 @@ class mwAPI:
             code = r["error"]["code"]
             if code == "missingtitle":
                 raise PageNotFoundError(before or beforeid)
-            elif code == "invalidtitle":
+            if code == "invalidtitle":
                 raise PageNameError(before or beforeid)
-            else:
-                raise APIError(r["error"]["info"], code)
+            raise APIError(r["error"]["info"], code)
         else:
             return r["move"]

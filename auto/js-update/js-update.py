@@ -1,4 +1,5 @@
 """Update JS files on MGP."""
+import ast
 
 import logging
 import subprocess
@@ -27,7 +28,7 @@ logger.info("Task started.")
 
 logger.info("Getting JS list...")
 with open("list.py", "r", encoding="UTF-8") as f:
-    LIST = eval(f.read())
+    LIST = ast.literal_eval(f.read())
 logger.info("Got JS list.")
 
 logger.info("Connecting to MGP...")

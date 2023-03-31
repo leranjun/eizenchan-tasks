@@ -78,7 +78,7 @@ else:
     logger.info("Finished updating files.")
 
 logger.info("Running ESF...")
-p = subprocess.Popen(["lua", "ESF/esf.lua"])
+p = subprocess.Popen(["/usr/bin/lua", "ESF/esf.lua"])
 p.wait()
 logger.info("Finished running ESF.")
 

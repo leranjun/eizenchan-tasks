@@ -152,8 +152,8 @@ class mwAPI:
     def listContribs(
         self, username=None, start=None, end=None, *, recursive=True, **kwargs
     ):
-        userid = kwargs.get("userid", None)
-        userprefix = kwargs.get("userprefix", None)
+        userid = kwargs.get("userid")
+        userprefix = kwargs.get("userprefix")
         if username is None and userid is None and userprefix is None:
             # No username, userid or userprefix specified
             raise TypeError("No username, userid or userprefix specified")
@@ -169,7 +169,7 @@ class mwAPI:
         if recursive and "continue" in r:
             kwargs["uccontinue"] = r["continue"]["uccontinue"]
             t = self.listContribs(username, start, end, **kwargs)
-            res = t + res if kwargs.get("ucdir", None) == "newer" else res + t
+            res = t + res if kwargs.get("ucdir") == "newer" else res + t
 
         return res
 

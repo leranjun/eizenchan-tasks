@@ -10,7 +10,7 @@ print("Logged in")
 print("Opening list of pages...")
 jobs = []
 with open("pages.txt") as f:
-    jobs = list(page for page in (p.strip() for p in f) if page)
+    jobs = [page for page in (p.strip() for p in f) if page]
 
 print(jobs)
 print("Got list of pages.")

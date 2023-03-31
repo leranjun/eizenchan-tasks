@@ -1,5 +1,4 @@
-# skip-cq: PYL-W0104
-[
+[  # skip-cq: PYL-W0104
     "MediaWiki:Gadget-HotCat.js",
     "MediaWiki:Gadget-rollback-summary.js",
     "User:AnnAngela/js/userStatus.js",

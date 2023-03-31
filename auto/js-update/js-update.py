@@ -1,6 +1,5 @@
 """Update JS files on MGP."""
 import ast
-
 import logging
 import subprocess
 import sys

@@ -1,8 +1,3 @@
 {
-    "conventionalCommits.scopes": [
-        "mwapi",
-        "mooncake",
-        "fulltext-replace",
-        "cat-tree"
-    ]
+    "conventionalCommits.scopes": ["mwapi", "mooncake", "fulltext-replace", "cat-tree", "al-equip"]
 }

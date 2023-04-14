@@ -1,13 +1,17 @@
 """Auto update for Azur Lane equip data."""
 import logging
+import os
 import subprocess
 import sys
 from typing import List, cast
 
+from dotenv import load_dotenv
 from github import Github
 from github.ContentFile import ContentFile
 
 from mwapi import MwApi
+
+load_dotenv()
 
 with open(".control", "r", encoding="utf-8") as f:
     if f.read().strip() == "off":
@@ -27,7 +31,7 @@ logger.addHandler(ch)
 logger.info("Task started.")
 
 logger.info("Getting repo...")
-g = Github("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")
+g = Github(os.getenv("GH_TOKEN"))
 # TODO: use AzurLaneTools/AzurLaneLuaScripts instead
 repo = g.get_repo("Dimbreath/AzurLaneData")
 logger.info("Got repo.")

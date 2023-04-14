@@ -14,17 +14,17 @@ ROOT_ID = 176083
 output = {}
 q = deque([(ROOT, ROOT_ID)])
 while q:
-    title, id = q.popleft()
-    pages = api.list_category_members(pageid=id, cmprop="ids|title|type")
+    title, pageid = q.popleft()
+    pages = api.list_category_members(pageid=pageid, cmprop="ids|title|type")
     subcats = []
-    subpage = 0
+    SUBPAGE = 0
     for page in pages:
         if page["type"] == "subcat":
             q.append((page["title"], page["pageid"]))
             subcats.append(page["pageid"])
         else:
-            subpage += 1
-    output[id] = {"title": title, "subcats": subcats, "subpage": subpage}
+            SUBPAGE += 1
+    output[pageid] = {"title": title, "subcats": subcats, "subpage": SUBPAGE}
 
 # save output to JSON file
 with open("cat-tree.json", "w", encoding="utf-8") as f:

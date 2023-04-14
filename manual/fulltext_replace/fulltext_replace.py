@@ -56,7 +56,7 @@ for x in pages:
         break
     except KeyboardInterrupt:
         sys.exit(1)
-    except Exception as e:
+    except BaseException as e: # pylint: disable=broad-except
         print(e)
 
     print("Finished: " + str(x["pageid"]))

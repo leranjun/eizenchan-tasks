@@ -40,11 +40,13 @@ ZHMO = {
 }
 
 
-def toZhNum(o):
-    o = str(o)
+def to_zh_num(o: int) -> str:
+    # pylint: disable=invalid-name
+    """Convert number to Chinese number."""
+    r = str(o)
     for k, v in ZHNUM:
-        o = o.replace(str(k), str(v))
-    return o
+        r = r.replace(str(k), str(v))
+    return r
 
 
 with open("config.py", "r", encoding="utf-8") as f:
@@ -60,7 +62,7 @@ api = MwApi()
 api.login_with_config("passwords.py", "zh")
 print("Logged in")
 
-YEAR_ZH = toZhNum(CONFIG["year"])
+YEAR_ZH = to_zh_num(CONFIG["year"])
 MONTH_ZH = ZHMO[CONFIG["month"]]
 
 res = api.get_content("MGP:萌娘百科月报/月饼/订阅")

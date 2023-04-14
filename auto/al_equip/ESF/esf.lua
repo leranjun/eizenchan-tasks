@@ -114,7 +114,7 @@ esf.NAT = {
 
 -- Initialise output and sort table
 esf.output = {}
-esf.sort = {{}, {}}
+esf.sort = { {}, {} }
 esf.keep = {}
 
 for _, v in pairs(esf.data.subList) do
@@ -195,4 +195,3 @@ io.open("equip_formatted.lua", "w+"):write(esf.outstr)
 -- print("Output successfully stored in file equip_formatted.lua.")
 
 -- os.execute("pause")
-

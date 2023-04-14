@@ -1,24 +1,25 @@
-from mwapi import mwAPI
+"""This script is used to batch flag files for deletion."""
+from mwapi import MwApi
 
 print("Logging in...")
-site = "cm"
+SITE = "cm"
 
-api = mwAPI()
-api.loginWithConfig("passwords.py", site)
+api = MwApi()
+api.login_with_config("passwords.py", SITE)
 print("Logged in")
 
 print("Opening list of pages...")
 jobs = []
-with open("pages.txt") as f:
+with open("pages.txt", encoding="utf-8") as f:
     jobs = [page for page in (p.strip() for p in f) if page]
 
 print(jobs)
 print("Got list of pages.")
 
-with open("error.log", "w") as f:
+with open("error.log", "w", encoding="utf-8") as f:
     for page in jobs:
         print("Working on " + page + "...")
-        # zhapi = mwAPI(CONFIG["zh"][0])
+        # zhapi = MwApi(CONFIG["zh"][0])
         # fu = zhapi.fileUsage(page)
         # print(fu)
         # if "known" not in fu["-1"]:

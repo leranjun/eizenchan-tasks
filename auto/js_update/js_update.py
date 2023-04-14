@@ -5,7 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from mwapi import mwAPI
+from mwapi import MwApi
 
 with open(".control", "r", encoding="utf-8") as f:
     if f.read().strip() == "off":
@@ -31,13 +31,13 @@ with open("list.py", "r", encoding="UTF-8") as f:
 logger.info("Got JS list.")
 
 logger.info("Connecting to MGP...")
-api = mwAPI()
-api.connectWithConfig("passwords.py", "zh")
+api = MwApi()
+api.connect_with_config("passwords.py", "zh")
 logger.info("Connected to MGP.")
 
 for page in LIST:
     logger.info("Getting %s...", page)
-    content = api.getContent(page)
+    content = api.get_content(page)
     escaped = page.replace(":", "/")
     path = Path("js/" + escaped)
     path.mkdir(parents=True, exist_ok=True)

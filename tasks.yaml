@@ -1,11 +1,11 @@
 - name: al-equip
-  command: cd ~/tasks/auto/al-equip && al-equip/bin/python3 al-equip.py
+  command: cd ~/tasks/auto/al_equip && al_equip/bin/python3 al_equip.py
   image: tf-python39
   # no-filelog: true
   schedule: "0 11 * * THU"
   emails: onfailure
 - name: js-update
-  command: cd ~/tasks/auto/js-update && js-update/bin/python3 js-update.py
+  command: cd ~/tasks/auto/js_update && js_update/bin/python3 js_update.py
   image: tf-python39
   # no-filelog: true
   schedule: "0 20 1 * *"

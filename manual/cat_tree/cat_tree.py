@@ -1,10 +1,11 @@
+"""Get the category tree of a category."""
 import json
 from collections import deque
 
-from mwapi import mwAPI
+from mwapi import MwApi
 
-api = mwAPI()
-api.loginWithConfig("passwords.py", "zh")
+api = MwApi()
+api.login_with_config("passwords.py", "zh")
 print("Logged in")
 
 ROOT = "追踪分类"
@@ -14,7 +15,7 @@ output = {}
 q = deque([(ROOT, ROOT_ID)])
 while q:
     title, id = q.popleft()
-    pages = api.listCategoryMembers(pageid=id, cmprop="ids|title|type")
+    pages = api.list_category_members(pageid=id, cmprop="ids|title|type")
     subcats = []
     subpage = 0
     for page in pages:
@@ -26,5 +27,5 @@ while q:
     output[id] = {"title": title, "subcats": subcats, "subpage": subpage}
 
 # save output to JSON file
-with open("cat-tree.json", "w") as f:
+with open("cat-tree.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False)

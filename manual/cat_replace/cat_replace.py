@@ -1,25 +1,30 @@
+"""Replace categories in files."""
 import ast
 import re
 
-from mwapi import mwAPI
+from mwapi import MwApi
 
-with open("config.py", "r") as f:
+with open("config.py", "r", encoding="utf-8") as f:
     CONFIG = ast.literal_eval(f.read())
 
-api = mwAPI()
-api.loginWithConfig("passwords.py", CONFIG["site"])
+api = MwApi()
+api.login_with_config("passwords.py", CONFIG["site"])
 print("Logged in")
 
 before = CONFIG["before"]
 after = CONFIG["after"]
 
-pages = api.listCategoryMembers(before, cmprop="ids", cmtype="file")
+pages = api.list_category_members(before, cmprop="ids", cmtype="file")
 print(pages)
 print("Got list of pages.")
 
 for x in pages:
     print("Working on: " + str(x["pageid"]))
-    content = api.getContent(pageid=x["pageid"])
+    content = api.get_content(pageid=x["pageid"])
+
+    if content is None:
+        print("Failed to get content for pageid: " + str(x["pageid"]))
+        continue
 
     # Remove random unicode character
     content = re.sub(

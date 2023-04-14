@@ -1,7 +1,11 @@
-import argparse
-import re
+"""Send mooncake to subscribers."""
 
-from mwapi import mwAPI
+import argparse
+import ast
+import re
+import sys
+
+from mwapi import MwApi
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dry", action="store_true", help="dry run")
@@ -43,24 +47,28 @@ def toZhNum(o):
     return o
 
 
-with open("config.py", "r") as f:
-    CONFIG = eval(f.read())
+with open("config.py", "r", encoding="utf-8") as f:
+    CONFIG = ast.literal_eval(f.read())
 
-with open("ignore.txt", "r") as f:
+with open("ignore.txt", "r", encoding="utf-8") as f:
     IGNORE = set(f.read().splitlines())
 
 if CONFIG["month"] not in ZHMO:
     raise ValueError("Invalid month")
 
-api = mwAPI()
-api.loginWithConfig("passwords.py", "zh")
+api = MwApi()
+api.login_with_config("passwords.py", "zh")
 print("Logged in")
 
-year_zh = toZhNum(CONFIG["year"])
-month_zh = ZHMO[CONFIG["month"]]
+YEAR_ZH = toZhNum(CONFIG["year"])
+MONTH_ZH = ZHMO[CONFIG["month"]]
 
-subList = api.getContent("MGP:萌娘百科月报/月饼/订阅").splitlines()
-with open("ignore.txt", "a") as f:
+res = api.get_content("MGP:萌娘百科月报/月饼/订阅")
+if not res:
+    sys.exit(1)
+
+subList = res.splitlines()
+with open("ignore.txt", "a", encoding="utf-8") as f:
     for line in subList:
         if not line.startswith("#"):
             print(f"{line} ignored")
@@ -78,9 +86,15 @@ with open("ignore.txt", "a") as f:
             continue
         api.append(
             page=target,
-            text="\n{{"
-            + f'subst:U:Eizenchan/mooncake|foreword={str(CONFIG["foreword"])}|year={str(CONFIG["year"])}|month={str(CONFIG["month"])}|year-zh={year_zh}|month-zh={month_zh}'
-            + "}}",
+            text=(
+                "\n{{subst:U:Eizenchan/mooncake"
+                f'|foreword={str(CONFIG["foreword"])}'
+                f'|year={str(CONFIG["year"])}'
+                f'|month={str(CONFIG["month"])}'
+                f"|year-zh={YEAR_ZH}"
+                f"|month-zh={MONTH_ZH}"
+                "}}"
+            ),
             summary="您点的月饼已送达，不要忘了给我们五星好评噢～",
             tags="Bot",
             bot=True,
@@ -89,5 +103,5 @@ with open("ignore.txt", "a") as f:
         f.write(f"{target}\n")
 
 if not args.dry:
-    with open("ignore.txt", "w") as f:
+    with open("ignore.txt", "w", encoding="utf-8") as f:
         f.write("")

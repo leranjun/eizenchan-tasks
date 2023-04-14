@@ -1,7 +1,8 @@
+"""Manual update script for equip data."""
 import ast
 import logging
 
-from mwapi import mwAPI
+from mwapi import MwApi
 
 logging.basicConfig(
     filename="log.txt",
@@ -17,16 +18,16 @@ logger.addHandler(ch)
 logger.info("Task started.")
 
 logger.info("Opening formatted equip file...")
-with open("equip_formatted.lua") as f:
+with open("equip_formatted.lua", "r", encoding="utf-8") as f:
     data = f.read()
     logger.info("Got formatted equip file.")
 
 logger.info("Getting target page...")
-with open("passwords.py", "r") as f:
+with open("passwords.py", "r", encoding="utf-8") as f:
     CONFIG = ast.literal_eval(f.read())
-api = mwAPI(CONFIG["zh"][0])
+api = MwApi(CONFIG["zh"][0])
 api.login(CONFIG["zh"][1], CONFIG["zh"][2])
-target = api.getContent("Module:碧蓝航线Equips/data")
+target = api.get_content("Module:碧蓝航线Equips/data")
 logger.info("Updating target page...")
 api.edit(
     "Module:碧蓝航线Equips/data",

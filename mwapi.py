@@ -75,6 +75,7 @@ class MwApi:
 
     @staticmethod
     def __join_param(names: str | list[str], params: dict[str, str]) -> None:
+        """Join a list of parameters into a string separated by |."""
         # Convert list to string
         if isinstance(names, str):
             # Only one parameter needs to be converted

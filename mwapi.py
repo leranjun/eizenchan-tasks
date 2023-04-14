@@ -175,7 +175,6 @@ class MwApi:
         redirects: bool = True
     ) -> Optional[str]:
         """Get the content of a page."""
-
         self.__check_page(page, pageid)
 
         params = {
